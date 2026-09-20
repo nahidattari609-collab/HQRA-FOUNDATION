@@ -2,80 +2,286 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#087f5b">
 <title>HQRA Foundation হিসাব</title>
-
 <style>
-*{box-sizing:border-box;font-family:Arial,sans-serif}
-body{margin:0;background:#f4f7f6;color:#222}
-header{background:#087f5b;color:white;padding:22px;text-align:center}
-header h1{margin:0;font-size:24px}
-.container{padding:15px;max-width:700px;margin:auto}
-.balance{background:white;padding:22px;border-radius:16px;text-align:center;margin-bottom:15px;box-shadow:0 2px 8px #ddd}
-.balance h2{font-size:32px;color:#087f5b;margin:8px}
-.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.card{background:white;padding:18px;border-radius:14px;box-shadow:0 2px 7px #ddd}
-.card h3{margin:0 0 8px;font-size:15px}
-.card strong{font-size:20px}
-.income{color:#198754}
-.expense{color:#dc3545}
-.buttons{margin-top:18px;display:grid;gap:12px}
-button{border:0;padding:16px;border-radius:12px;color:white;font-size:17px}
-.income-btn{background:#198754}
-.expense-btn{background:#dc3545}
-.history{background:white;margin-top:18px;padding:18px;border-radius:14px;box-shadow:0 2px 7px #ddd}
-.history h2{margin-top:0;font-size:19px}
+*{box-sizing:border-box}
+body{margin:0;background:#f4f7f6;color:#202124;font-family:Arial,"Noto Sans Bengali",sans-serif}
+header{background:#087f5b;color:#fff;padding:18px 15px;text-align:center;position:sticky;top:0;z-index:5}
+header h1{margin:0;font-size:22px}
+header small{opacity:.9}
+.container{max-width:760px;margin:auto;padding:14px}
+.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px #d9dfdd}
+.balance{text-align:center}
+.balance .amount{font-size:32px;font-weight:700;color:#087f5b;margin-top:6px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{padding:14px;border-radius:13px;background:#fff;box-shadow:0 2px 7px #ddd}
+.stat b{display:block;font-size:20px;margin-top:5px}
+.income{color:#198754}.expense{color:#dc3545}
+button{border:0;border-radius:11px;padding:13px 14px;font-size:16px;font-weight:600;cursor:pointer}
+.primary{background:#087f5b;color:#fff}.red{background:#dc3545;color:#fff}.blue{background:#0d6efd;color:#fff}.gray{background:#e9ecef;color:#222}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.section-title{font-size:19px;margin:0 0 12px}
+label{display:block;font-weight:600;font-size:14px;margin:10px 0 5px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #ccd4d1;border-radius:10px;font-size:16px;background:#fff}
+textarea{min-height:75px;resize:vertical}
+.form-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.hidden{display:none!important}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px}
+.tabs button{font-size:13px;padding:10px 5px}
+.tabs button.active{background:#087f5b;color:#fff}
+.tx{border:1px solid #e1e6e4;border-radius:12px;padding:12px;margin:8px 0;background:#fff}
+.tx-head{display:flex;justify-content:space-between;gap:8px}
+.tx-type{font-weight:700}
+.tx-meta{font-size:13px;color:#666;margin-top:5px;line-height:1.5}
+.amount-in{color:#198754;font-weight:700}.amount-out{color:#dc3545;font-weight:700}
+.tx-actions{display:flex;gap:7px;margin-top:9px}
+.tx-actions button{padding:7px 9px;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{border-bottom:1px solid #e5e5e5;padding:8px;text-align:left}
+.notice{font-size:13px;color:#666;line-height:1.5}
+.footer{text-align:center;color:#777;font-size:12px;padding:20px}
+.lock{position:fixed;inset:0;background:#f4f7f6;z-index:99;display:flex;align-items:center;justify-content:center;padding:20px}
+.lockbox{max-width:390px;width:100%;background:#fff;padding:24px;border-radius:18px;box-shadow:0 4px 20px #ccc;text-align:center}
+.badge{display:inline-block;padding:4px 8px;border-radius:20px;font-size:12px;background:#e8f5ef;color:#087f5b}
+@media(max-width:520px){.grid{gap:8px}.stat{padding:11px}.stat b{font-size:17px}.actions{grid-template-columns:1fr}.tabs button{font-size:12px}}
 </style>
 </head>
-
 <body>
 
+<div id="lockScreen" class="lock hidden">
+  <div class="lockbox">
+    <h2>🔐 HQRA Foundation</h2>
+    <p>অ্যাপটি খুলতে PIN দিন</p>
+    <input id="pinInput" type="password" inputmode="numeric" maxlength="6" placeholder="PIN">
+    <button class="primary" style="width:100%;margin-top:12px" onclick="unlock()">অ্যাপ খুলুন</button>
+    <p id="lockMsg" class="notice"></p>
+  </div>
+</div>
+
 <header>
-<h1>HQRA Foundation হিসাব</h1>
+  <h1>HQRA Foundation হিসাব</h1>
+  <small>সহজ ও মোবাইল-ফ্রেন্ডলি হিসাব</small>
 </header>
 
 <div class="container">
 
-<div class="balance">
-<div>বর্তমান ব্যালেন্স</div>
-<h2>৳ 0</h2>
+<div class="tabs">
+  <button class="gray active" onclick="showTab('home',this)">🏠 ড্যাশবোর্ড</button>
+  <button class="gray" onclick="showTab('transactions',this)">📋 হিসাব</button>
+  <button class="gray" onclick="showTab('members',this)">👥 সদস্য</button>
+  <button class="gray" onclick="showTab('settings',this)">⚙️ সেটিংস</button>
 </div>
 
-<div class="cards">
+<section id="home">
+  <div class="card balance">
+    <div>বর্তমান ব্যালেন্স</div>
+    <div class="amount" id="balance">৳ 0</div>
+  </div>
 
-<div class="card">
-<h3 class="income">মোট আয়</h3>
-<strong>৳ 0</strong>
+  <div class="grid">
+    <div class="stat"><span class="income">মোট আয়</span><b id="totalIncome">৳ 0</b></div>
+    <div class="stat"><span class="expense">মোট ব্যয়</span><b id="totalExpense">৳ 0</b></div>
+    <div class="stat"><span>আজকের আয়</span><b id="todayIncome">৳ 0</b></div>
+    <div class="stat"><span>আজকের ব্যয়</span><b id="todayExpense">৳ 0</b></div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <h2 class="section-title">➕ নতুন হিসাব</h2>
+    <div class="actions">
+      <button class="primary" onclick="openForm('income')">＋ আয় যোগ করুন</button>
+      <button class="red" onclick="openForm('expense')">− ব্যয় যোগ করুন</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">সাম্প্রতিক হিসাব</h2>
+    <div id="recentList"></div>
+  </div>
+</section>
+
+<section id="transactions" class="hidden">
+  <div class="card">
+    <h2 class="section-title">📋 সব হিসাব</h2>
+    <div class="grid">
+      <div><label>তারিখ</label><input id="filterDate" type="date" onchange="renderTransactions()"></div>
+      <div><label>ধরন</label><select id="filterType" onchange="renderTransactions()"><option value="">সব</option><option value="income">আয়</option><option value="expense">ব্যয়</option></select></div>
+    </div>
+    <label>খাত খুঁজুন</label><input id="filterCategory" placeholder="যেমন: দান, খাবার..." oninput="renderTransactions()">
+    <div id="transactionList" style="margin-top:12px"></div>
+  </div>
+</section>
+
+<section id="members" class="hidden">
+  <div class="card">
+    <h2 class="section-title">👥 সদস্য / দাতা যোগ করুন</h2>
+    <label>নাম</label><input id="memberName" placeholder="নাম">
+    <label>মোবাইল</label><input id="memberPhone" inputmode="tel" placeholder="01XXXXXXXXX">
+    <label>ঠিকানা</label><textarea id="memberAddress" placeholder="ঠিকানা"></textarea>
+    <button class="primary" style="width:100%;margin-top:12px" onclick="addMember()">সদস্য সংরক্ষণ</button>
+  </div>
+  <div class="card">
+    <h2 class="section-title">সদস্য তালিকা</h2>
+    <div id="memberList"></div>
+  </div>
+</section>
+
+<section id="settings" class="hidden">
+  <div class="card">
+    <h2 class="section-title">📊 মাসিক রিপোর্ট</h2>
+    <label>মাস নির্বাচন করুন</label><input id="reportMonth" type="month" onchange="renderReport()">
+    <div id="reportBox" style="margin-top:12px"></div>
+    <button class="blue" style="width:100%;margin-top:10px" onclick="printReport()">🖨️ রিপোর্ট প্রিন্ট / PDF</button>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">💾 ব্যাকআপ</h2>
+    <p class="notice">আপনার হিসাব এই ফোনের ব্রাউজারে সংরক্ষিত থাকে। নিয়মিত ব্যাকআপ ফাইল রাখুন।</p>
+    <div class="actions">
+      <button class="blue" onclick="exportData()">⬇️ ব্যাকআপ নিন</button>
+      <button class="gray" onclick="document.getElementById('importFile').click()">⬆️ ব্যাকআপ ফেরত</button>
+    </div>
+    <input id="importFile" type="file" accept=".json" class="hidden" onchange="importData(event)">
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">🔐 PIN লক</h2>
+    <label>নতুন PIN (৪–৬ সংখ্যা)</label>
+    <input id="newPin" type="password" inputmode="numeric" maxlength="6" placeholder="যেমন 1234">
+    <button class="primary" style="width:100%;margin-top:10px" onclick="setPin()">PIN সেট করুন</button>
+    <button class="gray" style="width:100%;margin-top:8px" onclick="removePin()">PIN লক বন্ধ করুন</button>
+    <p class="notice">নোট: এটি সাধারণ অ্যাপ-লক; অত্যন্ত সংবেদনশীল তথ্যের জন্য আলাদা নিরাপদ সার্ভার/ব্যাকএন্ড প্রয়োজন।</p>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title">⚠️ ডাটা মুছুন</h2>
+    <button class="red" style="width:100%" onclick="clearAll()">সব হিসাব মুছে দিন</button>
+  </div>
+</section>
+
+<section id="formSection" class="hidden">
+  <div class="card">
+    <h2 class="section-title" id="formTitle">আয় যোগ করুন</h2>
+    <input id="editId" type="hidden">
+    <input id="formType" type="hidden">
+    <label>তারিখ</label><input id="txDate" type="date">
+    <label>খাত</label><input id="txCategory" placeholder="যেমন: সাধারণ দান / খাবার">
+    <label>টাকার পরিমাণ</label><input id="txAmount" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0">
+    <label id="personLabel">দাতার/উৎসের নাম</label><input id="txPerson" placeholder="নাম">
+    <label>মাধ্যম</label>
+    <select id="txMethod"><option>নগদ</option><option>ব্যাংক</option><option>বিকাশ</option><option>নগদ (মোবাইল)</option><option>রকেট</option><option>অন্যান্য</option></select>
+    <label>মন্তব্য</label><textarea id="txNote" placeholder="প্রয়োজনে লিখুন"></textarea>
+    <div class="form-actions">
+      <button class="primary" onclick="saveTransaction()">সংরক্ষণ</button>
+      <button class="gray" onclick="closeForm()">বাতিল</button>
+    </div>
+  </div>
+</section>
+
+<div class="footer">HQRA Foundation হিসাব • ডাটা এই ডিভাইসে সংরক্ষিত</div>
 </div>
 
-<div class="card">
-<h3 class="expense">মোট ব্যয়</h3>
-<strong>৳ 0</strong>
-</div>
+<script>
+const KEY="hqra_transactions_v1", MEMBER_KEY="hqra_members_v1", PIN_KEY="hqra_pin_v1";
+let transactions=JSON.parse(localStorage.getItem(KEY)||"[]");
+let members=JSON.parse(localStorage.getItem(MEMBER_KEY)||"[]");
 
-<div class="card">
-<h3>আজকের আয়</h3>
-<strong>৳ 0</strong>
-</div>
+function money(n){return "৳ "+Number(n||0).toLocaleString("bn-BD",{maximumFractionDigits:2})}
+function today(){return new Date().toISOString().slice(0,10)}
+function saveAll(){localStorage.setItem(KEY,JSON.stringify(transactions));localStorage.setItem(MEMBER_KEY,JSON.stringify(members))}
+function showTab(id,btn){
+  ["home","transactions","members","settings","formSection"].forEach(x=>document.getElementById(x).classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+  document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
+  if(btn)btn.classList.add("active");
+  if(id==="home")renderHome();
+  if(id==="transactions")renderTransactions();
+  if(id==="members")renderMembers();
+  if(id==="settings")renderReport();
+}
+function openForm(type,tx=null){
+  document.querySelectorAll("section").forEach(s=>s.classList.add("hidden"));
+  document.getElementById("formSection").classList.remove("hidden");
+  document.getElementById("formType").value=type;
+  document.getElementById("formTitle").textContent=tx?(type==="income"?"আয় সম্পাদনা":"ব্যয় সম্পাদনা"):(type==="income"?"আয় যোগ করুন":"ব্যয় যোগ করুন");
+  document.getElementById("personLabel").textContent=type==="income"?"দাতার/উৎসের নাম":"যাকে/যেখানে প্রদান করা হয়েছে";
+  document.getElementById("editId").value=tx?tx.id:"";
+  document.getElementById("txDate").value=tx?tx.date:today();
+  document.getElementById("txCategory").value=tx?tx.category:"";
+  document.getElementById("txAmount").value=tx?tx.amount:"";
+  document.getElementById("txPerson").value=tx?tx.person:"";
+  document.getElementById("txMethod").value=tx?tx.method:"নগদ";
+  document.getElementById("txNote").value=tx?tx.note:"";
+  window.scrollTo(0,0);
+}
+function closeForm(){showTab("home",document.querySelector(".tabs button"))}
+function saveTransaction(){
+  const type=document.getElementById("formType").value;
+  const date=document.getElementById("txDate").value;
+  const category=document.getElementById("txCategory").value.trim();
+  const amount=Number(document.getElementById("txAmount").value);
+  const person=document.getElementById("txPerson").value.trim();
+  if(!date||!category||!amount||amount<0){alert("তারিখ, খাত ও সঠিক টাকার পরিমাণ দিন।");return}
+  const obj={id:document.getElementById("editId").value||Date.now().toString(),type,date,category,amount,person,method:document.getElementById("txMethod").value,note:document.getElementById("txNote").value.trim()};
+  const idx=transactions.findIndex(x=>x.id===obj.id);
+  if(idx>=0)transactions[idx]=obj; else transactions.push(obj);
+  saveAll(); alert("হিসাব সংরক্ষণ হয়েছে।"); closeForm();
+}
+function renderHome(){
+  let inc=0,exp=0,tInc=0,tExp=0;
+  transactions.forEach(t=>{if(t.type==="income"){inc+=Number(t.amount);if(t.date===today())tInc+=Number(t.amount)}else{exp+=Number(t.amount);if(t.date===today())tExp+=Number(t.amount)}});
+  document.getElementById("totalIncome").textContent=money(inc);
+  document.getElementById("totalExpense").textContent=money(exp);
+  document.getElementById("balance").textContent=money(inc-exp);
+  document.getElementById("todayIncome").textContent=money(tInc);
+  document.getElementById("todayExpense").textContent=money(tExp);
+  const list=[...transactions].sort((a,b)=>b.date.localeCompare(a.date)||Number(b.id)-Number(a.id)).slice(0,5);
+  document.getElementById("recentList").innerHTML=list.length?list.map(txHTML).join(""):'<p class="notice">এখনো কোনো হিসাব যোগ করা হয়নি।</p>';
+}
+function txHTML(t){
+  return `<div class="tx"><div class="tx-head"><span><span class="badge">${t.type==="income"?"আয়":"ব্যয়"}</span> <b>${esc(t.category)}</b></span><span class="${t.type==="income"?"amount-in":"amount-out"}">${t.type==="income"?"+":"−"} ${money(t.amount)}</span></div><div class="tx-meta">📅 ${t.date} • ${esc(t.method||"")} ${t.person?`• ${esc(t.person)}`:""}${t.note?`<br>📝 ${esc(t.note)}`:""}</div><div class="tx-actions"><button class="gray" onclick='editTx(${JSON.stringify(t.id)})'>✏️ সম্পাদনা</button><button class="gray" onclick='deleteTx(${JSON.stringify(t.id)})'>🗑️ মুছুন</button></div></div>`;
+}
+function renderTransactions(){
+  const d=document.getElementById("filterDate").value, type=document.getElementById("filterType").value, cat=document.getElementById("filterCategory").value.toLowerCase();
+  let arr=transactions.filter(t=>(!d||t.date===d)&&(!type||t.type===type)&&(!cat||t.category.toLowerCase().includes(cat))).sort((a,b)=>b.date.localeCompare(a.date)||Number(b.id)-Number(a.id));
+  document.getElementById("transactionList").innerHTML=arr.length?arr.map(txHTML).join(""):'<p class="notice">কোনো হিসাব পাওয়া যায়নি।</p>';
+}
+function editTx(id){const t=transactions.find(x=>x.id===id);if(t)openForm(t.type,t)}
+function deleteTx(id){if(!confirm("এই হিসাবটি মুছে ফেলবেন?"))return;transactions=transactions.filter(x=>x.id!==id);saveAll();renderHome();renderTransactions()}
+function addMember(){
+  const name=document.getElementById("memberName").value.trim();if(!name){alert("নাম দিন।");return}
+  members.push({id:Date.now().toString(),name,phone:document.getElementById("memberPhone").value.trim(),address:document.getElementById("memberAddress").value.trim()});
+  saveAll();["memberName","memberPhone","memberAddress"].forEach(id=>document.getElementById(id).value="");renderMembers();alert("সদস্য সংরক্ষণ হয়েছে।")
+}
+function memberTotal(name){return transactions.filter(t=>t.type==="income"&&t.person===name).reduce((s,t)=>s+Number(t.amount),0)}
+function renderMembers(){document.getElementById("memberList").innerHTML=members.length?members.map(m=>`<div class="tx"><b>${esc(m.name)}</b><div class="tx-meta">📱 ${esc(m.phone||"নেই")}<br>🏠 ${esc(m.address||"নেই")}<br>💰 মোট প্রদান: ${money(memberTotal(m.name))}</div><div class="tx-actions"><button class="gray" onclick="deleteMember('${m.id}')">🗑️ মুছুন</button></div></div>`).join(""):'<p class="notice">এখনো কোনো সদস্য যোগ করা হয়নি।</p>'}
+function deleteMember(id){if(confirm("সদস্যটি মুছে ফেলবেন?")){members=members.filter(m=>m.id!==id);saveAll();renderMembers()}}
+function renderReport(){
+  const el=document.getElementById("reportMonth"), month=el.value||today().slice(0,7);el.value=month;
+  let inc=0,exp=0,count=0;
+  transactions.forEach(t=>{if(t.date.startsWith(month)){count++;if(t.type==="income")inc+=Number(t.amount);else exp+=Number(t.amount)}});
+  document.getElementById("reportBox").innerHTML=`<div class="grid"><div class="stat"><span class="income">মোট আয়</span><b>${money(inc)}</b></div><div class="stat"><span class="expense">মোট ব্যয়</span><b>${money(exp)}</b></div></div><div class="card" style="margin:10px 0 0;padding:12px;background:#f7faf9">অবশিষ্ট: <b class="income">${money(inc-exp)}</b><br><span class="notice">লেনদেন: ${count} টি</span></div>`;
+}
+function printReport(){window.print()}
+function exportData(){
+  const data={app:"HQRA Foundation",version:1,transactions,members,exportedAt:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);a.download="HQRA-Foundation-backup.json";a.click();URL.revokeObjectURL(a.href);
+}
+function importData(e){
+  const file=e.target.files[0];if(!file)return;
+  const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.transactions)||!Array.isArray(d.members))throw 0;transactions=d.transactions;members=d.members;saveAll();renderHome();alert("ব্যাকআপ সফলভাবে ফেরত এসেছে।")}catch(x){alert("ব্যাকআপ ফাইলটি সঠিক নয়।")}};r.readAsText(file);e.target.value="";
+}
+function setPin(){const p=document.getElementById("newPin").value;if(!/^\d{4,6}$/.test(p)){alert("৪ থেকে ৬ সংখ্যার PIN দিন।");return}localStorage.setItem(PIN_KEY,p);document.getElementById("newPin").value="";alert("PIN সেট হয়েছে। পরেরবার অ্যাপ খুললে PIN চাইবে।")}
+function removePin(){if(confirm("PIN লক বন্ধ করবেন?")){localStorage.removeItem(PIN_KEY);alert("PIN লক বন্ধ হয়েছে।")}}
+function unlock(){const p=document.getElementById("pinInput").value;if(p===localStorage.getItem(PIN_KEY)){document.getElementById("lockScreen").classList.add("hidden")}else document.getElementById("lockMsg").textContent="PIN সঠিক নয়।"}
+function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 
-<div class="card">
-<h3>আজকের ব্যয়</h3>
-<strong>৳ 0</strong>
-</div>
-
-</div>
-
-<div class="buttons">
-<button class="income-btn">＋ আয় যোগ করুন</button>
-<button class="expense-btn">− ব্যয় যোগ করুন</button>
-</div>
-
-<div class="history">
-<h2>সর্বশেষ হিসাব</h2>
-<p>এখনো কোনো হিসাব যোগ করা হয়নি।</p>
-</div>
-
-</div>
-
+document.addEventListener("DOMContentLoaded",()=>{
+  renderHome();renderMembers();renderReport();
+  if(localStorage.getItem(PIN_KEY))document.getElementById("lockScreen").classList.remove("hidden");
+});
+</script>
 </body>
 </html>
