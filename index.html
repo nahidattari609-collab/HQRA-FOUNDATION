@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HQRA Foundation হিসাব</title>
+
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+body{margin:0;background:#f4f7f6;color:#222}
+header{background:#087f5b;color:white;padding:22px;text-align:center}
+header h1{margin:0;font-size:24px}
+.container{padding:15px;max-width:700px;margin:auto}
+.balance{background:white;padding:22px;border-radius:16px;text-align:center;margin-bottom:15px;box-shadow:0 2px 8px #ddd}
+.balance h2{font-size:32px;color:#087f5b;margin:8px}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:white;padding:18px;border-radius:14px;box-shadow:0 2px 7px #ddd}
+.card h3{margin:0 0 8px;font-size:15px}
+.card strong{font-size:20px}
+.income{color:#198754}
+.expense{color:#dc3545}
+.buttons{margin-top:18px;display:grid;gap:12px}
+button{border:0;padding:16px;border-radius:12px;color:white;font-size:17px}
+.income-btn{background:#198754}
+.expense-btn{background:#dc3545}
+.history{background:white;margin-top:18px;padding:18px;border-radius:14px;box-shadow:0 2px 7px #ddd}
+.history h2{margin-top:0;font-size:19px}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>HQRA Foundation হিসাব</h1>
+</header>
+
+<div class="container">
+
+<div class="balance">
+<div>বর্তমান ব্যালেন্স</div>
+<h2>৳ 0</h2>
+</div>
+
+<div class="cards">
+
+<div class="card">
+<h3 class="income">মোট আয়</h3>
+<strong>৳ 0</strong>
+</div>
+
+<div class="card">
+<h3 class="expense">মোট ব্যয়</h3>
+<strong>৳ 0</strong>
+</div>
+
+<div class="card">
+<h3>আজকের আয়</h3>
+<strong>৳ 0</strong>
+</div>
+
+<div class="card">
+<h3>আজকের ব্যয়</h3>
+<strong>৳ 0</strong>
+</div>
+
+</div>
+
+<div class="buttons">
+<button class="income-btn">＋ আয় যোগ করুন</button>
+<button class="expense-btn">− ব্যয় যোগ করুন</button>
+</div>
+
+<div class="history">
+<h2>সর্বশেষ হিসাব</h2>
+<p>এখনো কোনো হিসাব যোগ করা হয়নি।</p>
+</div>
+
+</div>
+
+</body>
+</html>
